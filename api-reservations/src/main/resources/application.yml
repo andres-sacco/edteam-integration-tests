@@ -1,0 +1,58 @@
+management:
+  info:
+    env:
+      enabled: true
+  endpoint:
+    health:
+      show-details: always
+
+  endpoints:
+    web:
+      base-path: /
+      exposure:
+        include: "*"
+
+server:
+  port: 8080
+  compression:
+    enabled: true
+    min-response-size: 2048
+    mime-types: application/json,application/xml,text/html,text/plain
+
+  servlet:
+    context-path: /api
+
+info:
+  application:
+    groupId: '@project.groupId@'
+    artifactId: '@project.artifactId@'
+    version: '@project.version@'
+
+http-connector:
+  hosts:
+    api-catalog:
+      host: localhost
+      port: 6070
+      endpoints:
+        get-city:
+          url: "/api/flights/catalog/city/{code}"
+          readTimeout: 1000
+          writeTimeout: 1000
+          connectionTimeout: 2000
+
+spring:
+  datasource:
+    url: jdbc:mysql://localhost:3312/flights_reservation
+    username: root
+    password: muppet
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    show-sql: false
+
+  flyway:
+    locations: classpath:db
+    sql-migration-prefix: V
+    repeatable-sql-migration-prefix: R
+    sql-migration-separator: __
+    sql-migration-suffixes: .sql
