@@ -17,6 +17,9 @@
         <java.version>17</java.version>
         <mapstruct.version>1.5.5.Final</mapstruct.version>
         <springdoc-openapi-starter-webmvc-ui.version>2.1.0</springdoc-openapi-starter-webmvc-ui.version>
+        <flyway-mysql.version>9.16.3</flyway-mysql.version>
+        <mysql-connector-java.version>8.0.31</mysql-connector-java.version>
+
         <maven-compiler-plugin.version>3.8.1</maven-compiler-plugin.version>
 
         <formatter-maven-plugin.version>2.23.0</formatter-maven-plugin.version>
@@ -68,7 +71,7 @@
         <dependency>
             <groupId>mysql</groupId>
             <artifactId>mysql-connector-java</artifactId>
-            <version>8.0.31</version>
+            <version>${mysql-connector-java.version}</version>
         </dependency>
 
         <dependency>
@@ -84,7 +87,19 @@
         <dependency>
             <groupId>org.flywaydb</groupId>
             <artifactId>flyway-mysql</artifactId>
-            <version>9.16.3</version>
+            <version>${flyway-mysql.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-api</artifactId>
+            <scope>test</scope>
         </dependency>
 
     </dependencies>
