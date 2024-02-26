@@ -28,6 +28,6 @@ class ReservationControllerTest {
         mockMvc.perform(get("/reservation/".concat(String.valueOf(request))).contentType(CONTENT_TYPE))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(CONTENT_TYPE))
-                .andExpect(jsonPath("$.creationDate").value("2023-11-11"));;
+                .andExpect(jsonPath("$.creationDate").value("2023-11-11"));
     }
 }
