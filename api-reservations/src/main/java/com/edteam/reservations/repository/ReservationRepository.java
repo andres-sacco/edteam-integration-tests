@@ -16,5 +16,4 @@ public interface ReservationRepository extends JpaRepository<Reservation, Long> 
     @Transactional(readOnly = true, timeout = 30)
     List<Reservation> findAll(Specification<Reservation> specification, Pageable pageable);
 
-
 }

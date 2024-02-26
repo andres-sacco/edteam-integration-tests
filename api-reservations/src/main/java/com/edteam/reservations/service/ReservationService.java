@@ -37,7 +37,7 @@ public class ReservationService {
 
     @Autowired
     public ReservationService(ReservationRepository repository, ConversionService conversionService,
-                              CatalogConnector catalogConnector) {
+            CatalogConnector catalogConnector) {
         this.repository = repository;
         this.conversionService = conversionService;
         this.catalogConnector = catalogConnector;
@@ -45,7 +45,8 @@ public class ReservationService {
 
     public List<ReservationDTO> getReservations(SearchReservationCriteriaDTO criteria) {
         Pageable pageable = PageRequest.of(criteria.getPageActual(), criteria.getPageSize());
-        return conversionService.convert(repository.findAll(ReservationSpecification.withSearchCriteria(criteria), pageable), List.class);
+        return conversionService.convert(
+                repository.findAll(ReservationSpecification.withSearchCriteria(criteria), pageable), List.class);
     }
 
     public ReservationDTO getReservationById(Long id) {

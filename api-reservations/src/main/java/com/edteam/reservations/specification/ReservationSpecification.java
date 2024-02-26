@@ -33,9 +33,9 @@ public class ReservationSpecification {
                 predicates.add(criteriaBuilder.equal(root.get("creationDate"), criteria.getReservationDate()));
             }
 
-            //Order by specification
+            // Order by specification
             if (criteria.getSortingDirection() != null && criteria.getSortField() != null) {
-                if(criteria.getSortingDirection().equals("desc")) {
+                if (criteria.getSortingDirection().equals("desc")) {
                     query.orderBy(criteriaBuilder.desc(root.get(criteria.getSortField())));
                 } else {
                     query.orderBy(criteriaBuilder.desc(root.get(criteria.getSortField())));
