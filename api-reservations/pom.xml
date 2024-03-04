@@ -21,7 +21,7 @@
         <mysql-connector-java.version>8.0.31</mysql-connector-java.version>
 
         <maven-compiler-plugin.version>3.8.1</maven-compiler-plugin.version>
-
+        <maven-surefire-plugin.version>3.1.2</maven-surefire-plugin.version>
         <formatter-maven-plugin.version>2.23.0</formatter-maven-plugin.version>
     </properties>
     <dependencies>
@@ -140,6 +140,15 @@
                             <version>${mapstruct.version}</version>
                         </path>
                     </annotationProcessorPaths>
+                </configuration>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>${maven-surefire-plugin.version}</version>
+                <configuration>
+                    <groups>${activeGroups}</groups>
                 </configuration>
             </plugin>
 

@@ -43,18 +43,19 @@ class ReservationControllerTest {
         int request = 1;
 
         // When
-        MvcResult mvcResult = mockMvc.perform(get("/reservation/".concat(String.valueOf(request))).contentType(CONTENT_TYPE))
+        MvcResult mvcResult = mockMvc
+                .perform(get("/reservation/".concat(String.valueOf(request))).contentType(CONTENT_TYPE))
                 // Then - Another option to check the results
-                //.andExpect(status().isOk())
-                //.andExpect(content().contentType(CONTENT_TYPE))
-                //.andExpect(jsonPath("$.creationDate").value("2023-11-11"))
+                // .andExpect(status().isOk())
+                // .andExpect(content().contentType(CONTENT_TYPE))
+                // .andExpect(jsonPath("$.creationDate").value("2023-11-11"))
                 .andReturn();
         // Then
-        assertAll(
-                () -> assertEquals(200, mvcResult.getResponse().getStatus()),
+        assertAll(() -> assertEquals(200, mvcResult.getResponse().getStatus()),
                 () -> assertEquals(CONTENT_TYPE, mvcResult.getResponse().getContentType()),
-                () -> assertEquals("{\"id\":1,\"version\":3,\"passengers\":[{\"firstName\":\"Andres\",\"lastName\":\"Sacco\",\"documentNumber\":\"AB554713\",\"documentType\":\"PASSPORT\",\"birthday\":\"1985-01-01\"},{\"firstName\":\"Andres\",\"lastName\":\"Sacco\",\"documentNumber\":\"AB554718\",\"documentType\":\"PASSPORT\",\"birthday\":\"1985-01-01\"}],\"itinerary\":{\"id\":1,\"version\":4,\"segment\":[{\"origin\":\"BUE\",\"destination\":\"MIA\",\"departure\":\"2023-12-31\",\"arrival\":\"2024-01-01\",\"carrier\":\"AA\"}],\"price\":{\"totalPrice\":30.00,\"totalTax\":20.00,\"basePrice\":10.00}},\"creationDate\":\"2023-11-11\"}", mvcResult.getResponse().getContentAsString())
-        );
+                () -> assertEquals(
+                        "{\"id\":1,\"version\":3,\"passengers\":[{\"firstName\":\"Andres\",\"lastName\":\"Sacco\",\"documentNumber\":\"AB554713\",\"documentType\":\"PASSPORT\",\"birthday\":\"1985-01-01\"},{\"firstName\":\"Andres\",\"lastName\":\"Sacco\",\"documentNumber\":\"AB554718\",\"documentType\":\"PASSPORT\",\"birthday\":\"1985-01-01\"}],\"itinerary\":{\"id\":1,\"version\":4,\"segment\":[{\"origin\":\"BUE\",\"destination\":\"MIA\",\"departure\":\"2023-12-31\",\"arrival\":\"2024-01-01\",\"carrier\":\"AA\"}],\"price\":{\"totalPrice\":30.00,\"totalTax\":20.00,\"basePrice\":10.00}},\"creationDate\":\"2023-11-11\"}",
+                        mvcResult.getResponse().getContentAsString()));
     }
 
     @Order(1)
@@ -69,14 +70,14 @@ class ReservationControllerTest {
         String firstName = "Andres";
 
         // When
-        MvcResult mvcResult = mockMvc.perform(get("/reservation?firstName=".concat(firstName)).contentType(CONTENT_TYPE))
-                .andReturn();
+        MvcResult mvcResult = mockMvc
+                .perform(get("/reservation?firstName=".concat(firstName)).contentType(CONTENT_TYPE)).andReturn();
         // Then
-        assertAll(
-                () -> assertEquals(200, mvcResult.getResponse().getStatus()),
+        assertAll(() -> assertEquals(200, mvcResult.getResponse().getStatus()),
                 () -> assertEquals(CONTENT_TYPE, mvcResult.getResponse().getContentType()),
-                () -> assertEquals("[{\"id\":1,\"version\":3,\"passengers\":[{\"firstName\":\"Andres\",\"lastName\":\"Sacco\",\"documentNumber\":\"AB554713\",\"documentType\":\"PASSPORT\",\"birthday\":\"1985-01-01\"},{\"firstName\":\"Andres\",\"lastName\":\"Sacco\",\"documentNumber\":\"AB554718\",\"documentType\":\"PASSPORT\",\"birthday\":\"1985-01-01\"}],\"itinerary\":{\"id\":1,\"version\":4,\"segment\":[{\"origin\":\"BUE\",\"destination\":\"MIA\",\"departure\":\"2023-12-31\",\"arrival\":\"2024-01-01\",\"carrier\":\"AA\"}],\"price\":{\"totalPrice\":30.00,\"totalTax\":20.00,\"basePrice\":10.00}},\"creationDate\":\"2023-11-11\"}]", mvcResult.getResponse().getContentAsString())
-        );
+                () -> assertEquals(
+                        "[{\"id\":1,\"version\":3,\"passengers\":[{\"firstName\":\"Andres\",\"lastName\":\"Sacco\",\"documentNumber\":\"AB554713\",\"documentType\":\"PASSPORT\",\"birthday\":\"1985-01-01\"},{\"firstName\":\"Andres\",\"lastName\":\"Sacco\",\"documentNumber\":\"AB554718\",\"documentType\":\"PASSPORT\",\"birthday\":\"1985-01-01\"}],\"itinerary\":{\"id\":1,\"version\":4,\"segment\":[{\"origin\":\"BUE\",\"destination\":\"MIA\",\"departure\":\"2023-12-31\",\"arrival\":\"2024-01-01\",\"carrier\":\"AA\"}],\"price\":{\"totalPrice\":30.00,\"totalTax\":20.00,\"basePrice\":10.00}},\"creationDate\":\"2023-11-11\"}]",
+                        mvcResult.getResponse().getContentAsString()));
     }
 
     @Order(2)
@@ -91,15 +92,12 @@ class ReservationControllerTest {
         String request = "{\"passengers\":[{\"firstName\":\"Jose\",\"lastName\":\"Sacco\",\"documentNumber\":\"AB554713\",\"documentType\":\"PASSPORT\",\"birthday\":\"1985-01-01\"}],\"itinerary\":{\"segment\":[{\"origin\":\"BUE\",\"destination\":\"MIA\",\"departure\":\"2023-12-31\",\"arrival\":\"2024-01-01\",\"carrier\":\"AA\"}],\"price\":{\"totalPrice\":30.00,\"totalTax\":20.00,\"basePrice\":10.00}},\"creationDate\":\"2023-11-11\"}";
 
         // When
-        MvcResult mvcResult = mockMvc.perform(post("/reservation")
-                        .content(request).contentType(CONTENT_TYPE))
+        MvcResult mvcResult = mockMvc.perform(post("/reservation").content(request).contentType(CONTENT_TYPE))
                 .andReturn();
         // Then
-        assertAll(
-                () -> assertEquals(201, mvcResult.getResponse().getStatus()),
-                () -> assertEquals(CONTENT_TYPE, mvcResult.getResponse().getContentType()),
-                () -> assertTrue(mvcResult.getResponse().getContentAsString().contains("\"departure\":\"2023-12-31\""))
-        );
+        assertAll(() -> assertEquals(201, mvcResult.getResponse().getStatus()),
+                () -> assertEquals(CONTENT_TYPE, mvcResult.getResponse().getContentType()), () -> assertTrue(
+                        mvcResult.getResponse().getContentAsString().contains("\"departure\":\"2023-12-31\"")));
     }
 
     @Order(3)
@@ -115,16 +113,13 @@ class ReservationControllerTest {
         int requestId = 4;
 
         // When
-        MvcResult mvcResult = mockMvc.perform(put("/reservation/".concat(String.valueOf(requestId)))
-                        .content(requestBody)
-                        .contentType(CONTENT_TYPE))
+        MvcResult mvcResult = mockMvc.perform(
+                put("/reservation/".concat(String.valueOf(requestId))).content(requestBody).contentType(CONTENT_TYPE))
                 .andReturn();
         // Then
-        assertAll(
-                () -> assertEquals(200, mvcResult.getResponse().getStatus()),
+        assertAll(() -> assertEquals(200, mvcResult.getResponse().getStatus()),
                 () -> assertEquals(CONTENT_TYPE, mvcResult.getResponse().getContentType()),
-                () -> assertTrue(mvcResult.getResponse().getContentAsString().contains("\"firstName\":\"Jose\""))
-        );
+                () -> assertTrue(mvcResult.getResponse().getContentAsString().contains("\"firstName\":\"Jose\"")));
     }
 
     @Order(4)
@@ -139,15 +134,11 @@ class ReservationControllerTest {
         int request = 10;
 
         // When
-        MvcResult mvcResult = mockMvc.perform(delete("/reservation/".concat(String.valueOf(request))).contentType(CONTENT_TYPE))
-                .andReturn();
+        MvcResult mvcResult = mockMvc
+                .perform(delete("/reservation/".concat(String.valueOf(request))).contentType(CONTENT_TYPE)).andReturn();
         // Then
-        assertAll(
-                () -> assertEquals(200, mvcResult.getResponse().getStatus())
-        );
+        assertAll(() -> assertEquals(200, mvcResult.getResponse().getStatus()));
     }
-
-
 
     @Tag("error-case")
     @DisplayName("should not return the information of the reservation")
@@ -160,16 +151,15 @@ class ReservationControllerTest {
         int request = 1000;
 
         // When
-        MvcResult mvcResult = mockMvc.perform(get("/reservation/".concat(String.valueOf(request))).contentType(CONTENT_TYPE))
+        MvcResult mvcResult = mockMvc
+                .perform(get("/reservation/".concat(String.valueOf(request))).contentType(CONTENT_TYPE))
                 // Then - Another option to check the results
-                //.andExpect(status().isNotFound())
-                //.andExpect(content().contentType(CONTENT_TYPE))
+                // .andExpect(status().isNotFound())
+                // .andExpect(content().contentType(CONTENT_TYPE))
                 .andReturn();
         // Then
-        assertAll(
-                () -> assertEquals(404, mvcResult.getResponse().getStatus()),
-                () -> assertEquals(CONTENT_TYPE, mvcResult.getResponse().getContentType())
-        );
+        assertAll(() -> assertEquals(404, mvcResult.getResponse().getStatus()),
+                () -> assertEquals(CONTENT_TYPE, mvcResult.getResponse().getContentType()));
     }
 
     @Tag("error-case")
@@ -183,16 +173,13 @@ class ReservationControllerTest {
         String firstName = "Andressssss";
 
         // When
-        MvcResult mvcResult = mockMvc.perform(get("/reservation?firstName=".concat(firstName)).contentType(CONTENT_TYPE))
-                .andReturn();
+        MvcResult mvcResult = mockMvc
+                .perform(get("/reservation?firstName=".concat(firstName)).contentType(CONTENT_TYPE)).andReturn();
         // Then
-        assertAll(
-                () -> assertEquals(200, mvcResult.getResponse().getStatus()),
+        assertAll(() -> assertEquals(200, mvcResult.getResponse().getStatus()),
                 () -> assertEquals(CONTENT_TYPE, mvcResult.getResponse().getContentType()),
-                () -> assertEquals("[]", mvcResult.getResponse().getContentAsString())
-        );
+                () -> assertEquals("[]", mvcResult.getResponse().getContentAsString()));
     }
-
 
     @Tag("error-case")
     @DisplayName("should not persist a reservation")
@@ -205,14 +192,11 @@ class ReservationControllerTest {
         String request = "{\"passengers\":[{\"firstName\":\"Jose\",\"lastName\":\"Sacco\",\"documentNumber\":\"AB554713\",\"documentType\":\"PASSPORT\",\"birthday\":\"1985-01-01\"}],\"itinerary\":{\"segment\":[{\"origin\":\"LAS\",\"destination\":\"MIA\",\"departure\":\"2023-12-31\",\"arrival\":\"2024-01-01\",\"carrier\":\"AA\"}],\"price\":{\"totalPrice\":30.00,\"totalTax\":20.00,\"basePrice\":10.00}},\"creationDate\":\"2023-11-11\"}";
 
         // When
-        MvcResult mvcResult = mockMvc.perform(post("/reservation")
-                        .content(request).contentType(CONTENT_TYPE))
+        MvcResult mvcResult = mockMvc.perform(post("/reservation").content(request).contentType(CONTENT_TYPE))
                 .andReturn();
         // Then
-        assertAll(
-                () -> assertEquals(400, mvcResult.getResponse().getStatus()),
-                () -> assertEquals(CONTENT_TYPE, mvcResult.getResponse().getContentType())
-        );
+        assertAll(() -> assertEquals(400, mvcResult.getResponse().getStatus()),
+                () -> assertEquals(CONTENT_TYPE, mvcResult.getResponse().getContentType()));
     }
 
     @Tag("error-case")
@@ -227,15 +211,12 @@ class ReservationControllerTest {
         int requestId = 10000;
 
         // When
-        MvcResult mvcResult = mockMvc.perform(put("/reservation/".concat(String.valueOf(requestId)))
-                        .content(requestBody)
-                        .contentType(CONTENT_TYPE))
+        MvcResult mvcResult = mockMvc.perform(
+                put("/reservation/".concat(String.valueOf(requestId))).content(requestBody).contentType(CONTENT_TYPE))
                 .andReturn();
         // Then
-        assertAll(
-                () -> assertEquals(404, mvcResult.getResponse().getStatus()),
-                () -> assertEquals(CONTENT_TYPE, mvcResult.getResponse().getContentType())
-        );
+        assertAll(() -> assertEquals(404, mvcResult.getResponse().getStatus()),
+                () -> assertEquals(CONTENT_TYPE, mvcResult.getResponse().getContentType()));
     }
 
     @Tag("error-case")
@@ -249,11 +230,9 @@ class ReservationControllerTest {
         int request = 1000;
 
         // When
-        MvcResult mvcResult = mockMvc.perform(delete("/reservation/".concat(String.valueOf(request))).contentType(CONTENT_TYPE))
-                .andReturn();
+        MvcResult mvcResult = mockMvc
+                .perform(delete("/reservation/".concat(String.valueOf(request))).contentType(CONTENT_TYPE)).andReturn();
         // Then
-        assertAll(
-                () -> assertEquals(404, mvcResult.getResponse().getStatus())
-        );
+        assertAll(() -> assertEquals(404, mvcResult.getResponse().getStatus()));
     }
 }
