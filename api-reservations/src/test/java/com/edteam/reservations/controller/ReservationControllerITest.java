@@ -17,11 +17,11 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 @Tags(@Tag("integration"))
 @DisplayName("Check the functionality of the application")
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-class ReservationControllerTest {
+class ReservationControllerITest {
 
     public static final String CONTENT_TYPE = "application/json";
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(ReservationControllerTest.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(ReservationControllerITest.class);
 
     private MockMvc mockMvc;
 
