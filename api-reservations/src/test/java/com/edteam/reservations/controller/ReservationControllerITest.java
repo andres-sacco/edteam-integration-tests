@@ -157,10 +157,10 @@ class ReservationControllerITest {
                 // .andExpect(content().contentType(CONTENT_TYPE))
                 .andReturn();
         // Then
-        assertAll(
-                () -> assertEquals(404, mvcResult.getResponse().getStatus()),
+        assertAll(() -> assertEquals(404, mvcResult.getResponse().getStatus()),
                 () -> assertEquals(CONTENT_TYPE, mvcResult.getResponse().getContentType()),
-                () -> assertEquals("{\"description\":\"Reservation not found\",\"reasons\":null}", mvcResult.getResponse().getContentAsString()));
+                () -> assertEquals("{\"description\":\"Reservation not found\",\"reasons\":null}",
+                        mvcResult.getResponse().getContentAsString()));
     }
 
     @Tag("error-case")
@@ -196,10 +196,10 @@ class ReservationControllerITest {
         MvcResult mvcResult = mockMvc.perform(post("/reservation").content(request).contentType(CONTENT_TYPE))
                 .andReturn();
         // Then
-        assertAll(
-                () -> assertEquals(400, mvcResult.getResponse().getStatus()),
+        assertAll(() -> assertEquals(400, mvcResult.getResponse().getStatus()),
                 () -> assertEquals(CONTENT_TYPE, mvcResult.getResponse().getContentType()),
-                () -> assertEquals("{\"description\":\"The are attributes with wrong values\",\"reasons\":null}", mvcResult.getResponse().getContentAsString()));
+                () -> assertEquals("{\"description\":\"The are attributes with wrong values\",\"reasons\":null}",
+                        mvcResult.getResponse().getContentAsString()));
     }
 
     @Tag("error-case")
@@ -218,10 +218,10 @@ class ReservationControllerITest {
                 put("/reservation/".concat(String.valueOf(requestId))).content(requestBody).contentType(CONTENT_TYPE))
                 .andReturn();
         // Then
-        assertAll(
-                () -> assertEquals(404, mvcResult.getResponse().getStatus()),
+        assertAll(() -> assertEquals(404, mvcResult.getResponse().getStatus()),
                 () -> assertEquals(CONTENT_TYPE, mvcResult.getResponse().getContentType()),
-                () -> assertEquals("{\"description\":\"Reservation not found\",\"reasons\":null}", mvcResult.getResponse().getContentAsString()));
+                () -> assertEquals("{\"description\":\"Reservation not found\",\"reasons\":null}",
+                        mvcResult.getResponse().getContentAsString()));
     }
 
     @Tag("error-case")
@@ -238,9 +238,9 @@ class ReservationControllerITest {
         MvcResult mvcResult = mockMvc
                 .perform(delete("/reservation/".concat(String.valueOf(request))).contentType(CONTENT_TYPE)).andReturn();
         // Then
-        assertAll(
-                () -> assertEquals(404, mvcResult.getResponse().getStatus()),
+        assertAll(() -> assertEquals(404, mvcResult.getResponse().getStatus()),
                 () -> assertEquals(CONTENT_TYPE, mvcResult.getResponse().getContentType()),
-                () -> assertEquals("{\"description\":\"Reservation not found\",\"reasons\":null}", mvcResult.getResponse().getContentAsString()));
+                () -> assertEquals("{\"description\":\"Reservation not found\",\"reasons\":null}",
+                        mvcResult.getResponse().getContentAsString()));
     }
 }

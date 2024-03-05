@@ -39,13 +39,10 @@ class ReservationServiceITest {
         });
 
         // Then
-        assertAll(
-                () -> assertNotNull(exception),
+        assertAll(() -> assertNotNull(exception),
                 () -> assertEquals(APIError.RESERVATION_NOT_FOUND.getMessage(), exception.getDescription()),
-                () -> assertEquals(APIError.RESERVATION_NOT_FOUND.getHttpStatus(), exception.getStatus())
-        );
+                () -> assertEquals(APIError.RESERVATION_NOT_FOUND.getHttpStatus(), exception.getStatus()));
     }
-
 
     @Tag("error-case")
     @DisplayName("should not remove a reservation")
@@ -61,10 +58,8 @@ class ReservationServiceITest {
         });
 
         // Then
-        assertAll(
-                () -> assertNotNull(exception),
+        assertAll(() -> assertNotNull(exception),
                 () -> assertEquals(APIError.RESERVATION_NOT_FOUND.getMessage(), exception.getDescription()),
-                () -> assertEquals(APIError.RESERVATION_NOT_FOUND.getHttpStatus(), exception.getStatus())
-        );
+                () -> assertEquals(APIError.RESERVATION_NOT_FOUND.getHttpStatus(), exception.getStatus()));
     }
 }
