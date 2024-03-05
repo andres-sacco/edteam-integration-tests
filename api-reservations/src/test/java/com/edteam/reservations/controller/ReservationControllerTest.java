@@ -53,7 +53,7 @@ class ReservationControllerTest {
         assertAll(
                 () -> assertEquals(200, mvcResult.getResponse().getStatus()),
                 () -> assertEquals(CONTENT_TYPE, mvcResult.getResponse().getContentType()),
-                () -> assertEquals("{\"id\":1,\"version\":3,\"passengers\":[{\"firstName\":\"Andres\",\"lastName\":\"Sacco\",\"documentNumber\":\"AB554713\",\"documentType\":\"PASSPORT\",\"birthday\":\"1985-01-01\"},{\"firstName\":\"Andres\",\"lastName\":\"Sacco\",\"documentNumber\":\"AB554718\",\"documentType\":\"PASSPORT\",\"birthday\":\"1985-01-01\"}],\"itinerary\":{\"id\":1,\"version\":4,\"segment\":[{\"origin\":\"BUE\",\"destination\":\"MIA\",\"departure\":\"2023-12-31\",\"arrival\":\"2024-01-01\",\"carrier\":\"AA\"}],\"price\":{\"totalPrice\":30.00,\"totalTax\":20.00,\"basePrice\":10.00}},\"creationDate\":\"2023-11-11\"}", mvcResult.getResponse().getContentAsString())
+                () -> assertEquals("{\"id\":1,\"version\":3,\"passengers\":[{\"firstName\":\"Andres\",\"lastName\":\"Sacco\",\"documentNumber\":\"AB554713\",\"documentType\":\"PASSPORT\",\"birthday\":\"1985-01-01\"},{\"firstName\":\"Andres\",\"lastName\":\"Sacco\",\"documentNumber\":\"AB554718\",\"documentType\":\"PASSPORT\",\"birthday\":\"1985-01-01\"}],\"itinerary\":{\"id\":1,\"version\":3,\"segment\":[{\"origin\":\"BUE\",\"destination\":\"MIA\",\"departure\":\"2023-12-31\",\"arrival\":\"2024-01-01\",\"carrier\":\"AA\"}],\"price\":{\"totalPrice\":30.00,\"totalTax\":20.00,\"basePrice\":10.00}},\"creationDate\":\"2023-11-11\"}", mvcResult.getResponse().getContentAsString())
         );
     }
 
@@ -75,7 +75,7 @@ class ReservationControllerTest {
         assertAll(
                 () -> assertEquals(200, mvcResult.getResponse().getStatus()),
                 () -> assertEquals(CONTENT_TYPE, mvcResult.getResponse().getContentType()),
-                () -> assertEquals("[{\"id\":1,\"version\":3,\"passengers\":[{\"firstName\":\"Andres\",\"lastName\":\"Sacco\",\"documentNumber\":\"AB554713\",\"documentType\":\"PASSPORT\",\"birthday\":\"1985-01-01\"},{\"firstName\":\"Andres\",\"lastName\":\"Sacco\",\"documentNumber\":\"AB554718\",\"documentType\":\"PASSPORT\",\"birthday\":\"1985-01-01\"}],\"itinerary\":{\"id\":1,\"version\":4,\"segment\":[{\"origin\":\"BUE\",\"destination\":\"MIA\",\"departure\":\"2023-12-31\",\"arrival\":\"2024-01-01\",\"carrier\":\"AA\"}],\"price\":{\"totalPrice\":30.00,\"totalTax\":20.00,\"basePrice\":10.00}},\"creationDate\":\"2023-11-11\"}]", mvcResult.getResponse().getContentAsString())
+                () -> assertEquals("[{\"id\":1,\"version\":3,\"passengers\":[{\"firstName\":\"Andres\",\"lastName\":\"Sacco\",\"documentNumber\":\"AB554713\",\"documentType\":\"PASSPORT\",\"birthday\":\"1985-01-01\"},{\"firstName\":\"Andres\",\"lastName\":\"Sacco\",\"documentNumber\":\"AB554718\",\"documentType\":\"PASSPORT\",\"birthday\":\"1985-01-01\"}],\"itinerary\":{\"id\":1,\"version\":3,\"segment\":[{\"origin\":\"BUE\",\"destination\":\"MIA\",\"departure\":\"2023-12-31\",\"arrival\":\"2024-01-01\",\"carrier\":\"AA\"}],\"price\":{\"totalPrice\":30.00,\"totalTax\":20.00,\"basePrice\":10.00}},\"creationDate\":\"2023-11-11\"},{\"id\":2,\"version\":1,\"passengers\":[{\"firstName\":\"Andres\",\"lastName\":\"Sacco\",\"documentNumber\":\"AB554714\",\"documentType\":\"PASSPORT\",\"birthday\":\"1985-01-01\"},{\"firstName\":\"Horacio\",\"lastName\":\"Sacco\",\"documentNumber\":\"AB554715\",\"documentType\":\"PASSPORT\",\"birthday\":\"1985-01-01\"}],\"itinerary\":{\"id\":2,\"version\":1,\"segment\":[{\"origin\":\"BUE\",\"destination\":\"MIA\",\"departure\":\"2023-12-31\",\"arrival\":\"2024-01-01\",\"carrier\":\"AA\"}],\"price\":{\"totalPrice\":30.00,\"totalTax\":20.00,\"basePrice\":10.00}},\"creationDate\":\"2023-11-12\"}]", mvcResult.getResponse().getContentAsString())
         );
     }
 
@@ -111,7 +111,7 @@ class ReservationControllerTest {
         LOGGER.info("Running update_should_change_a_persisted_reservation");
 
         // Given
-        String requestBody = "{\"id\":4,\"version\":2,\"passengers\":[{\"firstName\":\"Jose\",\"lastName\":\"Sacco\",\"documentNumber\":\"AB554713\",\"documentType\":\"PASSPORT\",\"birthday\":\"1985-01-01\"},{\"firstName\":\"Andres\",\"lastName\":\"Sacco\",\"documentNumber\":\"AB554718\",\"documentType\":\"PASSPORT\",\"birthday\":\"1985-01-01\"}],\"itinerary\":{\"id\":4,\"version\":2,\"segment\":[{\"origin\":\"BUE\",\"destination\":\"MIA\",\"departure\":\"2023-12-31\",\"arrival\":\"2024-01-01\",\"carrier\":\"AA\"}],\"price\":{\"totalPrice\":30.00,\"totalTax\":20.00,\"basePrice\":10.00}},\"creationDate\":\"2023-11-11\"}";
+        String requestBody = "{\"id\":4,\"version\":0,\"passengers\":[{\"firstName\":\"Jose\",\"lastName\":\"Sacco\",\"documentNumber\":\"AB554713\",\"documentType\":\"PASSPORT\",\"birthday\":\"1985-01-01\"},{\"firstName\":\"Andres\",\"lastName\":\"Sacco\",\"documentNumber\":\"AB554718\",\"documentType\":\"PASSPORT\",\"birthday\":\"1985-01-01\"}],\"itinerary\":{\"id\":4,\"version\":0,\"segment\":[{\"origin\":\"BUE\",\"destination\":\"MIA\",\"departure\":\"2023-12-31\",\"arrival\":\"2024-01-01\",\"carrier\":\"AA\"}],\"price\":{\"totalPrice\":30.00,\"totalTax\":20.00,\"basePrice\":10.00}},\"creationDate\":\"2023-11-11\"}";
         int requestId = 4;
 
         // When
@@ -138,7 +138,7 @@ class ReservationControllerTest {
         LOGGER.info("Running delete_should_remove_a_persisted_reservation");
 
         // Given
-        int request = 10;
+        int request = 5;
 
         // When
         MvcResult mvcResult = mockMvc.perform(delete("/reservation/".concat(String.valueOf(request))).contentType(CONTENT_TYPE))
