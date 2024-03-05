@@ -158,8 +158,10 @@ class ReservationControllerTest {
                 // .andExpect(content().contentType(CONTENT_TYPE))
                 .andReturn();
         // Then
-        assertAll(() -> assertEquals(404, mvcResult.getResponse().getStatus()),
-                () -> assertEquals(CONTENT_TYPE, mvcResult.getResponse().getContentType()));
+        assertAll(
+                () -> assertEquals(404, mvcResult.getResponse().getStatus()),
+                () -> assertEquals(CONTENT_TYPE, mvcResult.getResponse().getContentType()),
+                () -> assertEquals("{\"description\":\"Reservation not found\",\"reasons\":null}", mvcResult.getResponse().getContentAsString()));
     }
 
     @Tag("error-case")
