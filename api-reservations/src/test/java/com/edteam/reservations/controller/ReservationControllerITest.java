@@ -12,17 +12,16 @@ import org.slf4j.LoggerFactory;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @Tags(@Tag("integration"))
 @DisplayName("Check the functionality of the application")
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-class ReservationControllerTest {
+class ReservationControllerITest {
 
     public static final String CONTENT_TYPE = "application/json";
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(ReservationControllerTest.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(ReservationControllerITest.class);
 
     private MockMvc mockMvc;
 

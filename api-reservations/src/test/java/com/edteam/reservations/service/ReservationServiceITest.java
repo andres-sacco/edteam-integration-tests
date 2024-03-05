@@ -14,7 +14,7 @@ import static org.junit.jupiter.api.Assertions.*;
 @Tags(@Tag("integration"))
 @DisplayName("Check the functionality of the application")
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-class ReservationServiceTest {
+class ReservationServiceITest {
 
     @Autowired
     ReservationRepository repository;
