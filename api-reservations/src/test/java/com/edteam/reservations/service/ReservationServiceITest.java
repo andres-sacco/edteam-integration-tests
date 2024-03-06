@@ -12,6 +12,7 @@ import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
 import org.testcontainers.containers.MySQLContainer;
 import org.testcontainers.junit.jupiter.Testcontainers;
+import org.testcontainers.utility.MountableFile;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -21,9 +22,11 @@ import static org.junit.jupiter.api.Assertions.*;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class ReservationServiceITest {
 
-    public static MySQLContainer container = new MySQLContainer<>("mysql:8.0").withUsername("root")
-            .withPassword("muppet").withDatabaseName("flights_reservation").withReuse(true);
-
+    public static MySQLContainer container = new MySQLContainer<>("mysql:8.2.0").withUsername("root")
+            .withPassword("muppet").withDatabaseName("flights_reservation")
+            .withCopyFileToContainer(MountableFile.forClasspathResource("/db/init.sql"),
+                    "/docker-entrypoint-initdb.d/schema.sql")
+            .withReuse(true);
     @Autowired
     ReservationRepository repository;
 
@@ -44,7 +47,6 @@ class ReservationServiceITest {
         registry.add("spring.datasource.username", container::getUsername);
         registry.add("spring.datasource.password", container::getPassword);
     }
-
 
     @Tag("error-case")
     @DisplayName("should not return the information of the reservation")

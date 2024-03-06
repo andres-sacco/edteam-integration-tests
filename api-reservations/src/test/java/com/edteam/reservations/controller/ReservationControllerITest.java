@@ -16,6 +16,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.testcontainers.containers.MySQLContainer;
 import org.testcontainers.junit.jupiter.Testcontainers;
+import org.testcontainers.utility.MountableFile;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -27,8 +28,11 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class ReservationControllerITest {
 
-    public static MySQLContainer container = new MySQLContainer<>("mysql:8.0").withUsername("root")
-            .withPassword("muppet").withDatabaseName("flights_reservation").withReuse(true);
+    public static MySQLContainer container = new MySQLContainer<>("mysql:8.2.0").withUsername("root")
+            .withPassword("muppet").withDatabaseName("flights_reservation")
+            .withCopyFileToContainer(MountableFile.forClasspathResource("/db/init.sql"),
+                    "/docker-entrypoint-initdb.d/schema.sql")
+            .withReuse(true);
 
     private static final String RESERVATION_URL = "/reservation";
 
@@ -153,7 +157,7 @@ class ReservationControllerITest {
         LOGGER.info("Running delete_should_remove_a_persisted_reservation");
 
         // Given
-        int request = 10;
+        int request = 5;
 
         // When
         MvcResult mvcResult = mockMvc.perform(delete(RESERVATION_URL.concat("/").concat(String.valueOf(request)))

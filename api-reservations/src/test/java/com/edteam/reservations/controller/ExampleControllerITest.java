@@ -39,13 +39,14 @@ class ExampleControllerITest {
         HtmlPage result = webClient.getPage(url);
 
         // Then
-        assertAll(
-                () -> assertEquals("Example Domain", result.getTitleText()),
-                () -> assertEquals("text/html; charset=UTF-8", result.getWebResponse().getResponseHeaderValue("Content-Type")),
+        assertAll(() -> assertEquals("Example Domain", result.getTitleText()),
+                () -> assertEquals("text/html; charset=UTF-8",
+                        result.getWebResponse().getResponseHeaderValue("Content-Type")),
                 () -> assertThat(result.getElementsByTagName("head").getLength()).isPositive(),
                 () -> assertThat(result.getElementsByTagName("h1").getLength()).isPositive(),
                 () -> assertThat((HtmlAnchor) result.getFirstByXPath("//a")).isNotNull(),
-                () -> assertThat(((HtmlAnchor) result.getFirstByXPath("//a")).getHrefAttribute()).isEqualTo("https://www.iana.org/domains/example")
+                () -> assertThat(((HtmlAnchor) result.getFirstByXPath("//a")).getHrefAttribute())
+                        .isEqualTo("https://www.iana.org/domains/example")
 
         );
     }
