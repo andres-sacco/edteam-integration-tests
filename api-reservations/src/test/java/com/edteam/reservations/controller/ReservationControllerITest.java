@@ -1,7 +1,10 @@
 package com.edteam.reservations.controller;
 
+import com.edteam.reservations.util.TestUtil;
 import org.junit.jupiter.api.*;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
@@ -19,7 +22,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class ReservationControllerITest {
 
-    public static final String CONTENT_TYPE = "application/json";
+    private static final String RESERVATION_URL = "/reservation";
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ReservationControllerITest.class);
 
@@ -39,22 +42,22 @@ class ReservationControllerITest {
         LOGGER.info("Running get_should_return_a_reservation");
 
         // Given
+        String responseBody = TestUtil.fromResponse("get-reservation-one-success-response.json");
         int request = 1;
 
         // When
         MvcResult mvcResult = mockMvc
-                .perform(get("/reservation/".concat(String.valueOf(request))).contentType(CONTENT_TYPE))
+                .perform(get(RESERVATION_URL.concat("/").concat(String.valueOf(request)))
+                        .contentType(MediaType.APPLICATION_JSON_VALUE))
                 // Then - Another option to check the results
                 // .andExpect(status().isOk())
                 // .andExpect(content().contentType(CONTENT_TYPE))
                 // .andExpect(jsonPath("$.creationDate").value("2023-11-11"))
                 .andReturn();
         // Then
-        assertAll(() -> assertEquals(200, mvcResult.getResponse().getStatus()),
-                () -> assertEquals(CONTENT_TYPE, mvcResult.getResponse().getContentType()),
-                () -> assertEquals(
-                        "{\"id\":1,\"version\":3,\"passengers\":[{\"firstName\":\"Andres\",\"lastName\":\"Sacco\",\"documentNumber\":\"AB554713\",\"documentType\":\"PASSPORT\",\"birthday\":\"1985-01-01\"},{\"firstName\":\"Andres\",\"lastName\":\"Sacco\",\"documentNumber\":\"AB554718\",\"documentType\":\"PASSPORT\",\"birthday\":\"1985-01-01\"}],\"itinerary\":{\"id\":1,\"version\":4,\"segment\":[{\"origin\":\"BUE\",\"destination\":\"MIA\",\"departure\":\"2023-12-31\",\"arrival\":\"2024-01-01\",\"carrier\":\"AA\"}],\"price\":{\"totalPrice\":30.00,\"totalTax\":20.00,\"basePrice\":10.00}},\"creationDate\":\"2023-11-11\"}",
-                        mvcResult.getResponse().getContentAsString()));
+        assertAll(() -> assertEquals(HttpStatus.OK.value(), mvcResult.getResponse().getStatus()),
+                () -> assertEquals(MediaType.APPLICATION_JSON_VALUE, mvcResult.getResponse().getContentType()),
+                () -> assertEquals(responseBody, mvcResult.getResponse().getContentAsString()));
     }
 
     @Order(1)
@@ -66,17 +69,16 @@ class ReservationControllerITest {
         LOGGER.info("Running get_should_return_the_list_of_reservations");
 
         // Given
+        String responseBody = TestUtil.fromResponse("get-reservation-list-success-response.json");
         String firstName = "Andres";
 
         // When
-        MvcResult mvcResult = mockMvc
-                .perform(get("/reservation?firstName=".concat(firstName)).contentType(CONTENT_TYPE)).andReturn();
+        MvcResult mvcResult = mockMvc.perform(get(RESERVATION_URL.concat("?firstName=").concat(firstName))
+                .contentType(MediaType.APPLICATION_JSON_VALUE)).andReturn();
         // Then
-        assertAll(() -> assertEquals(200, mvcResult.getResponse().getStatus()),
-                () -> assertEquals(CONTENT_TYPE, mvcResult.getResponse().getContentType()),
-                () -> assertEquals(
-                        "[{\"id\":1,\"version\":3,\"passengers\":[{\"firstName\":\"Andres\",\"lastName\":\"Sacco\",\"documentNumber\":\"AB554713\",\"documentType\":\"PASSPORT\",\"birthday\":\"1985-01-01\"},{\"firstName\":\"Andres\",\"lastName\":\"Sacco\",\"documentNumber\":\"AB554718\",\"documentType\":\"PASSPORT\",\"birthday\":\"1985-01-01\"}],\"itinerary\":{\"id\":1,\"version\":4,\"segment\":[{\"origin\":\"BUE\",\"destination\":\"MIA\",\"departure\":\"2023-12-31\",\"arrival\":\"2024-01-01\",\"carrier\":\"AA\"}],\"price\":{\"totalPrice\":30.00,\"totalTax\":20.00,\"basePrice\":10.00}},\"creationDate\":\"2023-11-11\"}]",
-                        mvcResult.getResponse().getContentAsString()));
+        assertAll(() -> assertEquals(HttpStatus.OK.value(), mvcResult.getResponse().getStatus()),
+                () -> assertEquals(MediaType.APPLICATION_JSON_VALUE, mvcResult.getResponse().getContentType()),
+                () -> assertEquals(responseBody, mvcResult.getResponse().getContentAsString()));
     }
 
     @Order(2)
@@ -88,14 +90,16 @@ class ReservationControllerITest {
         LOGGER.info("Running insert_should_return_a_persisted_reservation");
 
         // Given
-        String request = "{\"passengers\":[{\"firstName\":\"Jose\",\"lastName\":\"Sacco\",\"documentNumber\":\"AB554713\",\"documentType\":\"PASSPORT\",\"birthday\":\"1985-01-01\"}],\"itinerary\":{\"segment\":[{\"origin\":\"BUE\",\"destination\":\"MIA\",\"departure\":\"2023-12-31\",\"arrival\":\"2024-01-01\",\"carrier\":\"AA\"}],\"price\":{\"totalPrice\":30.00,\"totalTax\":20.00,\"basePrice\":10.00}},\"creationDate\":\"2023-11-11\"}";
+        String requestBody = TestUtil.fromRequest("post-reservation-success-request.json");
 
         // When
-        MvcResult mvcResult = mockMvc.perform(post("/reservation").content(request).contentType(CONTENT_TYPE))
+        MvcResult mvcResult = mockMvc
+                .perform(post(RESERVATION_URL).content(requestBody).contentType(MediaType.APPLICATION_JSON_VALUE))
                 .andReturn();
         // Then
-        assertAll(() -> assertEquals(201, mvcResult.getResponse().getStatus()),
-                () -> assertEquals(CONTENT_TYPE, mvcResult.getResponse().getContentType()), () -> assertTrue(
+        assertAll(() -> assertEquals(HttpStatus.CREATED.value(), mvcResult.getResponse().getStatus()),
+                () -> assertEquals(MediaType.APPLICATION_JSON_VALUE, mvcResult.getResponse().getContentType()),
+                () -> assertTrue(
                         mvcResult.getResponse().getContentAsString().contains("\"departure\":\"2023-12-31\"")));
     }
 
@@ -108,16 +112,15 @@ class ReservationControllerITest {
         LOGGER.info("Running update_should_change_a_persisted_reservation");
 
         // Given
-        String requestBody = "{\"id\":4,\"version\":2,\"passengers\":[{\"firstName\":\"Jose\",\"lastName\":\"Sacco\",\"documentNumber\":\"AB554713\",\"documentType\":\"PASSPORT\",\"birthday\":\"1985-01-01\"},{\"firstName\":\"Andres\",\"lastName\":\"Sacco\",\"documentNumber\":\"AB554718\",\"documentType\":\"PASSPORT\",\"birthday\":\"1985-01-01\"}],\"itinerary\":{\"id\":4,\"version\":2,\"segment\":[{\"origin\":\"BUE\",\"destination\":\"MIA\",\"departure\":\"2023-12-31\",\"arrival\":\"2024-01-01\",\"carrier\":\"AA\"}],\"price\":{\"totalPrice\":30.00,\"totalTax\":20.00,\"basePrice\":10.00}},\"creationDate\":\"2023-11-11\"}";
+        String requestBody = TestUtil.fromRequest("put-reservation-success-request.json");
         int requestId = 4;
 
         // When
-        MvcResult mvcResult = mockMvc.perform(
-                put("/reservation/".concat(String.valueOf(requestId))).content(requestBody).contentType(CONTENT_TYPE))
-                .andReturn();
+        MvcResult mvcResult = mockMvc.perform(put(RESERVATION_URL.concat("/").concat(String.valueOf(requestId)))
+                .content(requestBody).contentType(MediaType.APPLICATION_JSON_VALUE)).andReturn();
         // Then
-        assertAll(() -> assertEquals(200, mvcResult.getResponse().getStatus()),
-                () -> assertEquals(CONTENT_TYPE, mvcResult.getResponse().getContentType()),
+        assertAll(() -> assertEquals(HttpStatus.OK.value(), mvcResult.getResponse().getStatus()),
+                () -> assertEquals(MediaType.APPLICATION_JSON_VALUE, mvcResult.getResponse().getContentType()),
                 () -> assertTrue(mvcResult.getResponse().getContentAsString().contains("\"firstName\":\"Jose\"")));
     }
 
@@ -133,10 +136,10 @@ class ReservationControllerITest {
         int request = 10;
 
         // When
-        MvcResult mvcResult = mockMvc
-                .perform(delete("/reservation/".concat(String.valueOf(request))).contentType(CONTENT_TYPE)).andReturn();
+        MvcResult mvcResult = mockMvc.perform(delete(RESERVATION_URL.concat("/").concat(String.valueOf(request)))
+                .contentType(MediaType.APPLICATION_JSON_VALUE)).andReturn();
         // Then
-        assertAll(() -> assertEquals(200, mvcResult.getResponse().getStatus()));
+        assertAll(() -> assertEquals(HttpStatus.OK.value(), mvcResult.getResponse().getStatus()));
     }
 
     @Tag("error-case")
@@ -147,20 +150,21 @@ class ReservationControllerITest {
         LOGGER.info("Running get_should_not_return_a_reservation");
 
         // Given
+        String responseBody = TestUtil.fromResponse("get-reservation-one-error-response.json");
         int request = 1000;
 
         // When
         MvcResult mvcResult = mockMvc
-                .perform(get("/reservation/".concat(String.valueOf(request))).contentType(CONTENT_TYPE))
+                .perform(get(RESERVATION_URL.concat("/").concat(String.valueOf(request)))
+                        .contentType(MediaType.APPLICATION_JSON_VALUE))
                 // Then - Another option to check the results
                 // .andExpect(status().isNotFound())
                 // .andExpect(content().contentType(CONTENT_TYPE))
                 .andReturn();
         // Then
-        assertAll(() -> assertEquals(404, mvcResult.getResponse().getStatus()),
-                () -> assertEquals(CONTENT_TYPE, mvcResult.getResponse().getContentType()),
-                () -> assertEquals("{\"description\":\"Reservation not found\",\"reasons\":null}",
-                        mvcResult.getResponse().getContentAsString()));
+        assertAll(() -> assertEquals(HttpStatus.NOT_FOUND.value(), mvcResult.getResponse().getStatus()),
+                () -> assertEquals(MediaType.APPLICATION_JSON_VALUE, mvcResult.getResponse().getContentType()),
+                () -> assertEquals(responseBody, mvcResult.getResponse().getContentAsString()));
     }
 
     @Tag("error-case")
@@ -171,15 +175,16 @@ class ReservationControllerITest {
         LOGGER.info("Running get_should_not_return_the_list_of_reservations");
 
         // Given
+        String responseBody = TestUtil.fromResponse("get-reservation-list-error-response.json");
         String firstName = "Andressssss";
 
         // When
-        MvcResult mvcResult = mockMvc
-                .perform(get("/reservation?firstName=".concat(firstName)).contentType(CONTENT_TYPE)).andReturn();
+        MvcResult mvcResult = mockMvc.perform(get(RESERVATION_URL.concat("?firstName=").concat(firstName))
+                .contentType(MediaType.APPLICATION_JSON_VALUE)).andReturn();
         // Then
-        assertAll(() -> assertEquals(200, mvcResult.getResponse().getStatus()),
-                () -> assertEquals(CONTENT_TYPE, mvcResult.getResponse().getContentType()),
-                () -> assertEquals("[]", mvcResult.getResponse().getContentAsString()));
+        assertAll(() -> assertEquals(HttpStatus.OK.value(), mvcResult.getResponse().getStatus()),
+                () -> assertEquals(MediaType.APPLICATION_JSON_VALUE, mvcResult.getResponse().getContentType()),
+                () -> assertEquals(responseBody, mvcResult.getResponse().getContentAsString()));
     }
 
     @Tag("error-case")
@@ -190,16 +195,17 @@ class ReservationControllerITest {
         LOGGER.info("Running insert_should_not_persist_a_reservation");
 
         // Given
-        String request = "{\"passengers\":[{\"firstName\":\"Jose\",\"lastName\":\"Sacco\",\"documentNumber\":\"AB554713\",\"documentType\":\"PASSPORT\",\"birthday\":\"1985-01-01\"}],\"itinerary\":{\"segment\":[{\"origin\":\"LAS\",\"destination\":\"MIA\",\"departure\":\"2023-12-31\",\"arrival\":\"2024-01-01\",\"carrier\":\"AA\"}],\"price\":{\"totalPrice\":30.00,\"totalTax\":20.00,\"basePrice\":10.00}},\"creationDate\":\"2023-11-11\"}";
+        String requestBody = TestUtil.fromRequest("post-reservation-error-request.json");
+        String responseBody = TestUtil.fromResponse("post-reservation-error-response.json");
 
         // When
-        MvcResult mvcResult = mockMvc.perform(post("/reservation").content(request).contentType(CONTENT_TYPE))
+        MvcResult mvcResult = mockMvc
+                .perform(post(RESERVATION_URL).content(requestBody).contentType(MediaType.APPLICATION_JSON_VALUE))
                 .andReturn();
         // Then
-        assertAll(() -> assertEquals(400, mvcResult.getResponse().getStatus()),
-                () -> assertEquals(CONTENT_TYPE, mvcResult.getResponse().getContentType()),
-                () -> assertEquals("{\"description\":\"The are attributes with wrong values\",\"reasons\":null}",
-                        mvcResult.getResponse().getContentAsString()));
+        assertAll(() -> assertEquals(HttpStatus.BAD_REQUEST.value(), mvcResult.getResponse().getStatus()),
+                () -> assertEquals(MediaType.APPLICATION_JSON_VALUE, mvcResult.getResponse().getContentType()),
+                () -> assertEquals(responseBody, mvcResult.getResponse().getContentAsString()));
     }
 
     @Tag("error-case")
@@ -210,18 +216,17 @@ class ReservationControllerITest {
         LOGGER.info("Running update_should_not_change_a_reservation");
 
         // Given
-        String requestBody = "{\"id\":10000,\"version\":2,\"passengers\":[{\"firstName\":\"Jose\",\"lastName\":\"Sacco\",\"documentNumber\":\"AB554713\",\"documentType\":\"PASSPORT\",\"birthday\":\"1985-01-01\"},{\"firstName\":\"Andres\",\"lastName\":\"Sacco\",\"documentNumber\":\"AB554718\",\"documentType\":\"PASSPORT\",\"birthday\":\"1985-01-01\"}],\"itinerary\":{\"id\":4,\"version\":2,\"segment\":[{\"origin\":\"BUE\",\"destination\":\"MIA\",\"departure\":\"2023-12-31\",\"arrival\":\"2024-01-01\",\"carrier\":\"AA\"}],\"price\":{\"totalPrice\":30.00,\"totalTax\":20.00,\"basePrice\":10.00}},\"creationDate\":\"2023-11-11\"}";
+        String requestBody = TestUtil.fromRequest("put-reservation-error-request.json");
+        String responseBody = TestUtil.fromResponse("get-reservation-one-error-response.json");
         int requestId = 10000;
 
         // When
-        MvcResult mvcResult = mockMvc.perform(
-                put("/reservation/".concat(String.valueOf(requestId))).content(requestBody).contentType(CONTENT_TYPE))
-                .andReturn();
+        MvcResult mvcResult = mockMvc.perform(put(RESERVATION_URL.concat("/").concat(String.valueOf(requestId)))
+                .content(requestBody).contentType(MediaType.APPLICATION_JSON_VALUE)).andReturn();
         // Then
-        assertAll(() -> assertEquals(404, mvcResult.getResponse().getStatus()),
-                () -> assertEquals(CONTENT_TYPE, mvcResult.getResponse().getContentType()),
-                () -> assertEquals("{\"description\":\"Reservation not found\",\"reasons\":null}",
-                        mvcResult.getResponse().getContentAsString()));
+        assertAll(() -> assertEquals(HttpStatus.NOT_FOUND.value(), mvcResult.getResponse().getStatus()),
+                () -> assertEquals(MediaType.APPLICATION_JSON_VALUE, mvcResult.getResponse().getContentType()),
+                () -> assertEquals(responseBody, mvcResult.getResponse().getContentAsString()));
     }
 
     @Tag("error-case")
@@ -232,15 +237,15 @@ class ReservationControllerITest {
         LOGGER.info("Running delete_should_not_remove_a_reservation");
 
         // Given
+        String responseBody = TestUtil.fromResponse("get-reservation-one-error-response.json");
         int request = 1000;
 
         // When
-        MvcResult mvcResult = mockMvc
-                .perform(delete("/reservation/".concat(String.valueOf(request))).contentType(CONTENT_TYPE)).andReturn();
+        MvcResult mvcResult = mockMvc.perform(delete(RESERVATION_URL.concat("/").concat(String.valueOf(request)))
+                .contentType(MediaType.APPLICATION_JSON_VALUE)).andReturn();
         // Then
-        assertAll(() -> assertEquals(404, mvcResult.getResponse().getStatus()),
-                () -> assertEquals(CONTENT_TYPE, mvcResult.getResponse().getContentType()),
-                () -> assertEquals("{\"description\":\"Reservation not found\",\"reasons\":null}",
-                        mvcResult.getResponse().getContentAsString()));
+        assertAll(() -> assertEquals(HttpStatus.NOT_FOUND.value(), mvcResult.getResponse().getStatus()),
+                () -> assertEquals(MediaType.APPLICATION_JSON_VALUE, mvcResult.getResponse().getContentType()),
+                () -> assertEquals(responseBody, mvcResult.getResponse().getContentAsString()));
     }
 }

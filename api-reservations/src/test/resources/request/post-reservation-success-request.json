@@ -1,0 +1,1 @@
+{"passengers":[{"firstName":"Jose","lastName":"Sacco","documentNumber":"AB554713","documentType":"PASSPORT","birthday":"1985-01-01"}],"itinerary":{"segment":[{"origin":"BUE","destination":"MIA","departure":"2023-12-31","arrival":"2024-01-01","carrier":"AA"}],"price":{"totalPrice":30.00,"totalTax":20.00,"basePrice":10.00}},"creationDate":"2023-11-11"}
