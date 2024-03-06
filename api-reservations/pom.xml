@@ -22,6 +22,7 @@
 
         <htmlunit-driver.version>2.55.0</htmlunit-driver.version>
         <testcontainers.version>1.17.3</testcontainers.version>
+        <quickperf.version>1.1.0</quickperf.version>
 
         <maven-compiler-plugin.version>3.8.1</maven-compiler-plugin.version>
         <maven-surefire-plugin.version>3.1.2</maven-surefire-plugin.version>
@@ -123,6 +124,20 @@
             <groupId>org.testcontainers</groupId>
             <artifactId>mysql</artifactId>
             <version>${testcontainers.version}</version>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.quickperf</groupId>
+            <artifactId>quick-perf-junit5</artifactId>
+            <version>${quickperf.version}</version>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.quickperf</groupId>
+            <artifactId>quick-perf-springboot2-sql-starter</artifactId>
+            <version>${quickperf.version}</version>
             <scope>test</scope>
         </dependency>
     </dependencies>

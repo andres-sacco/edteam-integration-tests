@@ -2,10 +2,17 @@ package com.edteam.reservations.repository;
 
 import com.edteam.reservations.model.Reservation;
 import org.junit.jupiter.api.*;
+import org.quickperf.junit5.QuickPerfTest;
+import org.quickperf.spring.sql.QuickPerfSqlConfig;
+import org.quickperf.sql.annotation.AnalyzeSql;
+import org.quickperf.sql.annotation.ExpectInsert;
+import org.quickperf.sql.annotation.ExpectMaxQueryExecutionTime;
+import org.quickperf.sql.annotation.ExpectSelect;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.annotation.Import;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
 import org.testcontainers.containers.MySQLContainer;
@@ -23,6 +30,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @Tags(@Tag("integration"))
 @DisplayName("Check the functionality of the repository")
+@Import(QuickPerfSqlConfig.class)
+@QuickPerfTest
 @Testcontainers
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class ReservationRepositoryITest {
@@ -51,6 +60,9 @@ class ReservationRepositoryITest {
         registry.add("spring.datasource.password", container::getPassword);
     }
 
+    @ExpectSelect(2) // Validate the number of queries that are executed
+    @ExpectMaxQueryExecutionTime(thresholdInMilliSeconds = 8) // This check the duration of the execution of the query
+    @AnalyzeSql
     @Tag("success-case")
     @DisplayName("should return the information of all the reservations")
     @Test
@@ -70,6 +82,9 @@ class ReservationRepositoryITest {
                 () -> assertThat(result.get(0).getPassengers().get(0).getFirstName(), matchesRegex("[a-zA-Z]+")));
     }
 
+    @ExpectInsert(5) // Validate the number of queries that are executed
+    @ExpectMaxQueryExecutionTime(thresholdInMilliSeconds = 8) // This check the duration of the execution of the query
+    @AnalyzeSql
     @Tag("success-case")
     @DisplayName("should return the information of all the reservations")
     @Test
