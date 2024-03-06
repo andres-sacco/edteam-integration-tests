@@ -20,6 +20,8 @@
         <flyway-mysql.version>9.16.3</flyway-mysql.version>
         <mysql-connector-java.version>8.0.31</mysql-connector-java.version>
 
+        <htmlunit-driver.version>2.55.0</htmlunit-driver.version>
+
         <maven-compiler-plugin.version>3.8.1</maven-compiler-plugin.version>
         <maven-surefire-plugin.version>3.1.2</maven-surefire-plugin.version>
         <formatter-maven-plugin.version>2.23.0</formatter-maven-plugin.version>
@@ -99,6 +101,13 @@
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter-api</artifactId>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.seleniumhq.selenium</groupId>
+            <artifactId>htmlunit-driver</artifactId>
+            <version>${htmlunit-driver.version}</version>
             <scope>test</scope>
         </dependency>
     </dependencies>
