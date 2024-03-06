@@ -5,6 +5,8 @@ import org.junit.jupiter.api.*;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.test.context.DynamicPropertyRegistry;
+import org.springframework.test.context.DynamicPropertySource;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
@@ -12,21 +14,39 @@ import org.springframework.web.context.WebApplicationContext;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.testcontainers.containers.MySQLContainer;
+import org.testcontainers.junit.jupiter.Testcontainers;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 
+@Testcontainers
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @Tags(@Tag("integration"))
 @DisplayName("Check the functionality of the application")
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class ReservationControllerITest {
 
+    public static MySQLContainer container = new MySQLContainer<>("mysql:8.0").withUsername("root")
+            .withPassword("muppet").withDatabaseName("flights_reservation").withReuse(true);
+
     private static final String RESERVATION_URL = "/reservation";
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ReservationControllerITest.class);
 
     private MockMvc mockMvc;
+
+    @BeforeAll
+    public static void setUp() {
+        container.start();
+    }
+
+    @DynamicPropertySource
+    static void postgresqlProperties(DynamicPropertyRegistry registry) {
+        registry.add("spring.datasource.url", container::getJdbcUrl);
+        registry.add("spring.datasource.username", container::getUsername);
+        registry.add("spring.datasource.password", container::getPassword);
+    }
 
     @BeforeEach
     public void setUp(WebApplicationContext webApplicationContext) {
