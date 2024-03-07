@@ -1,6 +1,8 @@
 package com.edteam.reservations.controller;
 
 import com.edteam.reservations.util.TestUtil;
+import com.github.tomakehurst.wiremock.WireMockServer;
+import com.github.tomakehurst.wiremock.core.WireMockConfiguration;
 import org.junit.jupiter.api.*;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpStatus;
@@ -34,6 +36,8 @@ class ReservationControllerITest {
                     "/docker-entrypoint-initdb.d/schema.sql")
             .withReuse(true);
 
+    private static WireMockServer wireMockServer;
+
     private static final String RESERVATION_URL = "/reservation";
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ReservationControllerITest.class);
@@ -43,10 +47,27 @@ class ReservationControllerITest {
     @BeforeAll
     public static void setUp() {
         container.start();
+
+        // Configure WireMock to use the mappings directory
+        // This assumes your mappings are in the classpath under "wiremock" directory
+        WireMockConfiguration config = WireMockConfiguration.options()
+                .usingFilesUnderClasspath("src/test/resources/wiremock");
+        config.port(6070);
+
+        // Create a new WireMockServer instance
+        wireMockServer = new WireMockServer(config);
+
+        // Start the server
+        wireMockServer.start();
+    }
+
+    @AfterAll
+    public static void teardown() {
+        wireMockServer.stop();
     }
 
     @DynamicPropertySource
-    static void postgresqlProperties(DynamicPropertyRegistry registry) {
+    static void sqlProperties(DynamicPropertyRegistry registry) {
         registry.add("spring.datasource.url", container::getJdbcUrl);
         registry.add("spring.datasource.username", container::getUsername);
         registry.add("spring.datasource.password", container::getPassword);

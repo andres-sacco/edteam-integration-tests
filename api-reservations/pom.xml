@@ -23,6 +23,7 @@
         <htmlunit-driver.version>2.55.0</htmlunit-driver.version>
         <testcontainers.version>1.17.3</testcontainers.version>
         <quickperf.version>1.1.0</quickperf.version>
+        <wiremock.version>3.3.1</wiremock.version>
 
         <maven-compiler-plugin.version>3.8.1</maven-compiler-plugin.version>
         <maven-surefire-plugin.version>3.1.2</maven-surefire-plugin.version>
@@ -138,6 +139,13 @@
             <groupId>org.quickperf</groupId>
             <artifactId>quick-perf-springboot2-sql-starter</artifactId>
             <version>${quickperf.version}</version>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.wiremock</groupId>
+            <artifactId>wiremock</artifactId>
+            <version>${wiremock.version}</version>
             <scope>test</scope>
         </dependency>
     </dependencies>
