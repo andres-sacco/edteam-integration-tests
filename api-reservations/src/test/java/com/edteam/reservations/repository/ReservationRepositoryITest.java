@@ -1,8 +1,7 @@
 package com.edteam.reservations.repository;
 
+import com.edteam.reservations.util.BaseTest;
 import com.edteam.reservations.model.Reservation;
-import com.github.tomakehurst.wiremock.WireMockServer;
-import com.github.tomakehurst.wiremock.core.WireMockConfiguration;
 import org.junit.jupiter.api.*;
 import org.quickperf.junit5.QuickPerfTest;
 import org.quickperf.spring.sql.QuickPerfSqlConfig;
@@ -13,13 +12,7 @@ import org.quickperf.sql.annotation.ExpectSelect;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Import;
-import org.springframework.test.context.DynamicPropertyRegistry;
-import org.springframework.test.context.DynamicPropertySource;
-import org.testcontainers.containers.MySQLContainer;
-import org.testcontainers.junit.jupiter.Testcontainers;
-import org.testcontainers.utility.MountableFile;
 
 import java.util.List;
 
@@ -34,51 +27,12 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 @DisplayName("Check the functionality of the repository")
 @Import(QuickPerfSqlConfig.class)
 @QuickPerfTest
-@Testcontainers
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-class ReservationRepositoryITest {
+class ReservationRepositoryITest extends BaseTest {
 
     @Autowired
     ReservationRepository repository;
 
-    private static WireMockServer wireMockServer;
-
     private static final Logger LOGGER = LoggerFactory.getLogger(ReservationRepositoryITest.class);
-
-    public static MySQLContainer container = new MySQLContainer<>("mysql:8.2.0").withUsername("root")
-            .withPassword("muppet").withDatabaseName("flights_reservation")
-            .withCopyFileToContainer(MountableFile.forClasspathResource("/db/init.sql"),
-                    "/docker-entrypoint-initdb.d/schema.sql")
-            .withReuse(true);
-
-    @BeforeAll
-    public static void setUp() {
-        container.start();
-
-        // Configure WireMock to use the mappings directory
-        // This assumes your mappings are in the classpath under "wiremock" directory
-        WireMockConfiguration config = WireMockConfiguration.options()
-                .usingFilesUnderClasspath("src/test/resources/wiremock");
-        config.port(6070);
-
-        // Create a new WireMockServer instance
-        wireMockServer = new WireMockServer(config);
-
-        // Start the server
-        wireMockServer.start();
-    }
-
-    @AfterAll
-    public static void teardown() {
-        wireMockServer.stop();
-    }
-
-    @DynamicPropertySource
-    static void postgresqlProperties(DynamicPropertyRegistry registry) {
-        registry.add("spring.datasource.url", container::getJdbcUrl);
-        registry.add("spring.datasource.username", container::getUsername);
-        registry.add("spring.datasource.password", container::getPassword);
-    }
 
     @ExpectSelect(2) // Validate the number of queries that are executed
     @ExpectMaxQueryExecutionTime(thresholdInMilliSeconds = 8) // This check the duration of the execution of the query

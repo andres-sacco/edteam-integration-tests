@@ -1,14 +1,10 @@
 package com.edteam.reservations.controller;
 
+import com.edteam.reservations.util.BaseTest;
 import com.edteam.reservations.util.TestUtil;
-import com.github.tomakehurst.wiremock.WireMockServer;
-import com.github.tomakehurst.wiremock.core.WireMockConfiguration;
 import org.junit.jupiter.api.*;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.test.context.DynamicPropertyRegistry;
-import org.springframework.test.context.DynamicPropertySource;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
@@ -16,62 +12,20 @@ import org.springframework.web.context.WebApplicationContext;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.testcontainers.containers.MySQLContainer;
-import org.testcontainers.junit.jupiter.Testcontainers;
-import org.testcontainers.utility.MountableFile;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 
-@Testcontainers
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @Tags(@Tag("integration"))
 @DisplayName("Check the functionality of the application")
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-class ReservationControllerITest {
-
-    public static MySQLContainer container = new MySQLContainer<>("mysql:8.2.0").withUsername("root")
-            .withPassword("muppet").withDatabaseName("flights_reservation")
-            .withCopyFileToContainer(MountableFile.forClasspathResource("/db/init.sql"),
-                    "/docker-entrypoint-initdb.d/schema.sql")
-            .withReuse(true);
-
-    private static WireMockServer wireMockServer;
+class ReservationControllerITest extends BaseTest {
 
     private static final String RESERVATION_URL = "/reservation";
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ReservationControllerITest.class);
 
     private MockMvc mockMvc;
-
-    @BeforeAll
-    public static void setUp() {
-        container.start();
-
-        // Configure WireMock to use the mappings directory
-        // This assumes your mappings are in the classpath under "wiremock" directory
-        WireMockConfiguration config = WireMockConfiguration.options()
-                .usingFilesUnderClasspath("src/test/resources/wiremock");
-        config.port(6070);
-
-        // Create a new WireMockServer instance
-        wireMockServer = new WireMockServer(config);
-
-        // Start the server
-        wireMockServer.start();
-    }
-
-    @AfterAll
-    public static void teardown() {
-        wireMockServer.stop();
-    }
-
-    @DynamicPropertySource
-    static void sqlProperties(DynamicPropertyRegistry registry) {
-        registry.add("spring.datasource.url", container::getJdbcUrl);
-        registry.add("spring.datasource.username", container::getUsername);
-        registry.add("spring.datasource.password", container::getPassword);
-    }
 
     @BeforeEach
     public void setUp(WebApplicationContext webApplicationContext) {
