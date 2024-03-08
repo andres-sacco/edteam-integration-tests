@@ -7,13 +7,17 @@ import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
 import org.testcontainers.containers.MySQLContainer;
 import org.testcontainers.junit.jupiter.Testcontainers;
+import org.testcontainers.utility.MountableFile;
 
 @Testcontainers
 @SpringBootTest
 class ApiReservationsApplicationITest {
 
-    public static MySQLContainer container = new MySQLContainer<>("mysql:8.0").withUsername("root")
-            .withPassword("muppet").withDatabaseName("flights_reservation").withReuse(true);
+    public static MySQLContainer container = new MySQLContainer<>("mysql:8.2.0").withUsername("root")
+            .withPassword("muppet").withDatabaseName("flights_reservation")
+            .withCopyFileToContainer(MountableFile.forClasspathResource("/db/init.sql"),
+                    "/docker-entrypoint-initdb.d/schema.sql")
+            .withReuse(true);
 
     @BeforeAll
     public static void setUp() {
