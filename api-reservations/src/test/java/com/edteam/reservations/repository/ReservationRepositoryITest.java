@@ -1,6 +1,8 @@
 package com.edteam.reservations.repository;
 
 import com.edteam.reservations.model.Reservation;
+import com.github.tomakehurst.wiremock.WireMockServer;
+import com.github.tomakehurst.wiremock.core.WireMockConfiguration;
 import org.junit.jupiter.api.*;
 import org.quickperf.junit5.QuickPerfTest;
 import org.quickperf.spring.sql.QuickPerfSqlConfig;
@@ -39,6 +41,8 @@ class ReservationRepositoryITest {
     @Autowired
     ReservationRepository repository;
 
+    private static WireMockServer wireMockServer;
+
     private static final Logger LOGGER = LoggerFactory.getLogger(ReservationRepositoryITest.class);
 
     public static MySQLContainer container = new MySQLContainer<>("mysql:8.2.0").withUsername("root")
@@ -47,10 +51,26 @@ class ReservationRepositoryITest {
                     "/docker-entrypoint-initdb.d/schema.sql")
             .withReuse(true);
 
-
     @BeforeAll
     public static void setUp() {
         container.start();
+
+        // Configure WireMock to use the mappings directory
+        // This assumes your mappings are in the classpath under "wiremock" directory
+        WireMockConfiguration config = WireMockConfiguration.options()
+                .usingFilesUnderClasspath("src/test/resources/wiremock");
+        config.port(6070);
+
+        // Create a new WireMockServer instance
+        wireMockServer = new WireMockServer(config);
+
+        // Start the server
+        wireMockServer.start();
+    }
+
+    @AfterAll
+    public static void teardown() {
+        wireMockServer.stop();
     }
 
     @DynamicPropertySource
@@ -73,9 +93,7 @@ class ReservationRepositoryITest {
         List<Reservation> result = repository.findAll();
 
         // Then
-        assertAll(
-                () -> assertNotNull(result),
-                () -> assertThat(result, hasSize(5)),
+        assertAll(() -> assertNotNull(result), () -> assertThat(result, hasSize(5)),
                 () -> assertEquals(getReservation(1L, "BUE", "MIA").toString(), result.get(0).toString()),
                 () -> assertThat(result.get(0), hasProperty("id")),
                 () -> assertThat(result.get(0).getPassengers().get(0).getFirstName(), stringContainsInOrder("A", "s")),

@@ -63,10 +63,8 @@ public class Reservation extends Base {
         if (o == null || getClass() != o.getClass())
             return false;
         Reservation that = (Reservation) o;
-        return Objects.equals(getId(), that.getId())
-                && Objects.equals(passengers, that.passengers)
-                && Objects.equals(itinerary, that.itinerary)
-                && Objects.equals(creationDate, that.creationDate);
+        return Objects.equals(getId(), that.getId()) && Objects.equals(passengers, that.passengers)
+                && Objects.equals(itinerary, that.itinerary) && Objects.equals(creationDate, that.creationDate);
     }
 
     @Override

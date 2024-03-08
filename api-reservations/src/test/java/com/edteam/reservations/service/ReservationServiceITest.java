@@ -4,6 +4,8 @@ import com.edteam.reservations.connector.CatalogConnector;
 import com.edteam.reservations.enums.APIError;
 import com.edteam.reservations.exception.EdteamException;
 import com.edteam.reservations.repository.ReservationRepository;
+import com.github.tomakehurst.wiremock.WireMockServer;
+import com.github.tomakehurst.wiremock.core.WireMockConfiguration;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -27,6 +29,9 @@ class ReservationServiceITest {
             .withCopyFileToContainer(MountableFile.forClasspathResource("/db/init.sql"),
                     "/docker-entrypoint-initdb.d/schema.sql")
             .withReuse(true);
+
+    private static WireMockServer wireMockServer;
+
     @Autowired
     ReservationRepository repository;
 
@@ -39,7 +44,25 @@ class ReservationServiceITest {
     @BeforeAll
     public static void setUp() {
         container.start();
+
+        // Configure WireMock to use the mappings directory
+        // This assumes your mappings are in the classpath under "wiremock" directory
+        WireMockConfiguration config = WireMockConfiguration.options()
+                .usingFilesUnderClasspath("src/test/resources/wiremock");
+        config.port(6070);
+
+        // Create a new WireMockServer instance
+        wireMockServer = new WireMockServer(config);
+
+        // Start the server
+        wireMockServer.start();
     }
+
+    @AfterAll
+    public static void teardown() {
+        wireMockServer.stop();
+    }
+
 
     @DynamicPropertySource
     static void sqlProperties(DynamicPropertyRegistry registry) {

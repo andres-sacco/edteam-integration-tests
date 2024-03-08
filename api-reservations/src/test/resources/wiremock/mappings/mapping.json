@@ -1,26 +1,48 @@
 {
   "mappings": [
     {
+      "priority": 1,
       "request": {
         "method": "GET",
-        "urlPath": "/api/flights/catalog/city/BUE"
+        "urlPath": "/api/flights/catalog/city/BUE",
+        "headers": {
+          "Content-Type": {
+            "equalTo": "application/json"
+          }
+        }
       },
       "response": {
         "status": 200,
         "headers": {
           "Content-Type": "application/json"
+        },
+        "jsonBody": {
+          "name": "Buenos Aires",
+          "code": "BUE",
+          "timeZone": "America/Argentina/Buenos_Aires"
         }
       }
     },
     {
+      "priority": 1,
       "request": {
         "method": "GET",
-        "urlPath": "/api/flights/catalog/city/MIA"
+        "urlPath": "/api/flights/catalog/city/MIA",
+        "headers": {
+          "Content-Type": {
+            "equalTo": "application/json"
+          }
+        }
       },
       "response": {
         "status": 200,
         "headers": {
           "Content-Type": "application/json"
+        },
+        "jsonBody": {
+          "name": "Miami",
+          "code": "MIA",
+          "timeZone": "America/New_York"
         }
       }
     }

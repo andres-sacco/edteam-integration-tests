@@ -73,7 +73,7 @@ public class ReservationUtil {
         reservation.setId(id);
         reservation.setPassengers(List.of(passenger));
         reservation.setItinerary(itinerary);
-        reservation.setCreationDate(LocalDate.of(2023,11,11));
+        reservation.setCreationDate(LocalDate.of(2023, 11, 11));
 
         return reservation;
     }
