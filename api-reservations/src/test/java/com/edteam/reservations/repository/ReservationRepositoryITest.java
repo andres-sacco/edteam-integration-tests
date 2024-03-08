@@ -71,7 +71,7 @@ class ReservationRepositoryITest {
     }
 
     @Tag("success-case")
-    @DisplayName("should return the information of all the reservations")
+    @DisplayName("should save a reservation")
     @Test
     void save_should_return_the_information() {
 

@@ -17,7 +17,7 @@ import org.testcontainers.utility.MountableFile;
 import static org.junit.jupiter.api.Assertions.*;
 
 @Tags(@Tag("integration"))
-@DisplayName("Check the functionality of the application")
+@DisplayName("Check the functionality of the service")
 @Testcontainers
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class ReservationServiceITest {
