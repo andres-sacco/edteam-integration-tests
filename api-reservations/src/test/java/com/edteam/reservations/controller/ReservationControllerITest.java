@@ -233,6 +233,27 @@ class ReservationControllerITest {
     }
 
     @Tag("error-case")
+    @DisplayName("should not persist a reservation with latency problems")
+    @Test
+    void insert_should_not_persist_a_reservation_with_latency() throws Exception {
+
+        LOGGER.info("Running insert_should_not_persist_a_reservation_with_latency");
+
+        // Given
+        String requestBody = TestUtil.fromRequest("post-reservation-latency-error-request.json");
+        String responseBody = TestUtil.fromResponse("post-reservation-error-response.json");
+
+        // When
+        MvcResult mvcResult = mockMvc
+                .perform(post(RESERVATION_URL).content(requestBody).contentType(MediaType.APPLICATION_JSON_VALUE))
+                .andReturn();
+        // Then
+        assertAll(() -> assertEquals(HttpStatus.BAD_REQUEST.value(), mvcResult.getResponse().getStatus()),
+                () -> assertEquals(MediaType.APPLICATION_JSON_VALUE, mvcResult.getResponse().getContentType()),
+                () -> assertEquals(responseBody, mvcResult.getResponse().getContentAsString()));
+    }
+
+    @Tag("error-case")
     @DisplayName("should not persist a reservation")
     @Test
     void insert_should_not_persist_a_reservation() throws Exception {
