@@ -86,7 +86,7 @@ class ReservationRepositoryITest {
     @ExpectMaxQueryExecutionTime(thresholdInMilliSeconds = 8) // This check the duration of the execution of the query
     @AnalyzeSql
     @Tag("success-case")
-    @DisplayName("should return the information of all the reservations")
+    @DisplayName("should save a reservation")
     @Test
     void save_should_return_the_information() {
 
