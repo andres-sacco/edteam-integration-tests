@@ -12,7 +12,7 @@ import org.springframework.core.convert.ConversionService;
 import static org.junit.jupiter.api.Assertions.*;
 
 @Tags(@Tag("integration"))
-@DisplayName("Check the functionality of the application")
+@DisplayName("Check the functionality of the service")
 class ReservationServiceITest extends BaseTest {
 
     @Autowired
