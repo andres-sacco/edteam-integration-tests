@@ -94,13 +94,17 @@ public class ReservationService {
     }
 
     private void checkCity(ReservationDTO reservationDTO) {
-        for (SegmentDTO segmentDTO : reservationDTO.getItinerary().getSegment()) {
-            CityDTO origin = catalogConnector.getCity(segmentDTO.getOrigin());
-            CityDTO destination = catalogConnector.getCity(segmentDTO.getDestination());
+        try {
+            for (SegmentDTO segmentDTO : reservationDTO.getItinerary().getSegment()) {
+                CityDTO origin = catalogConnector.getCity(segmentDTO.getOrigin());
+                CityDTO destination = catalogConnector.getCity(segmentDTO.getDestination());
 
-            if (origin == null || destination == null) {
-                throw new EdteamException(APIError.VALIDATION_ERROR);
+                if (origin == null || destination == null) {
+                    throw new EdteamException(APIError.VALIDATION_ERROR);
+                }
             }
+        } catch (Exception e) {
+            throw new EdteamException(APIError.VALIDATION_ERROR);
         }
     }
 

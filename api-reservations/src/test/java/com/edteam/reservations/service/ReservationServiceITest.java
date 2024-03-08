@@ -63,7 +63,6 @@ class ReservationServiceITest {
         wireMockServer.stop();
     }
 
-
     @DynamicPropertySource
     static void sqlProperties(DynamicPropertyRegistry registry) {
         registry.add("spring.datasource.url", container::getJdbcUrl);

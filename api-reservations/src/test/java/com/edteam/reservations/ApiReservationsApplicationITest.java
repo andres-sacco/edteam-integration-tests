@@ -30,6 +30,7 @@ class ApiReservationsApplicationITest {
         registry.add("spring.datasource.username", container::getUsername);
         registry.add("spring.datasource.password", container::getPassword);
     }
+
     @Test
     void contextLoad() {
 
