@@ -1,6 +1,29 @@
 {
   "mappings": [
     {
+      "priority": 10,
+      "request": {
+        "method": "GET",
+        "urlPattern": "/api/flights/catalog/city/[A-Z]{3}",
+        "headers": {
+          "Content-Type": {
+            "equalTo": "application/json"
+          }
+        }
+      },
+      "response": {
+        "status": 200,
+        "headers": {
+          "Content-Type": "application/json"
+        },
+        "jsonBody": {
+          "name": "Default",
+          "code": "DEF",
+          "timeZone": "Default_Timezone"
+        }
+      }
+    },
+    {
       "priority": 1,
       "request": {
         "method": "GET",
@@ -65,6 +88,7 @@
       }
     },
     {
+      "priority": 1,
       "request": {
         "method": "GET",
         "urlPattern": "/api/flights/catalog/city/[0-9]{3}"
