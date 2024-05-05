@@ -31,7 +31,7 @@ UNLOCK TABLES;
 
 LOCK TABLES `passenger` WRITE;
 /*!40000 ALTER TABLE `passenger` DISABLE KEYS */;
-INSERT INTO `passenger` VALUES ('1985-01-01',1,0,1,'Andres','Sacco','AB554713','PASSPORT'),('1985-01-01',2,0,2,'Andres','Sacco','AB554714','PASSPORT'),('1985-01-01',3,0,2,'Horacio','Sacco','AB554715','PASSPORT'),('1985-01-01',4,0,3,'Ignacio','Canale','AB554716','PASSPORT'),('1985-01-01',5,0,4,'Julian','Dominguez','AB554717','PASSPORT'),('1985-01-01',6,0,1,'Andres','Sacco','AB554718','PASSPORT'),('1985-01-01',7,0,3,'Josefa','Sacco','AB554719','PASSPORT'),('1985-01-01',8,0,4,'Maria','Rodriguez','AB554720','PASSPORT'),('1985-01-01',9,0,5,'Rodolfo','Rodriguez','AB554721','PASSPORT'),('1985-01-01',10,0,5,'Maria','Ferrari','AB554722','PASSPORT');
+INSERT INTO `passenger` VALUES ('1985-01-01',1,0,1,'Andres','Sacco','AB554713','PASSPORT'),('1985-01-01',2,0,2,'Alberto','Sacco','AB554714','PASSPORT'),('1985-01-01',3,0,2,'Horacio','Sacco','AB554715','PASSPORT'),('1985-01-01',4,0,3,'Ignacio','Canale','AB554716','PASSPORT'),('1985-01-01',5,0,4,'Julian','Dominguez','AB554717','PASSPORT'),('1985-01-01',6,0,1,'Andres','Sacco','AB554718','PASSPORT'),('1985-01-01',7,0,3,'Josefa','Sacco','AB554719','PASSPORT'),('1985-01-01',8,0,4,'Maria','Rodriguez','AB554720','PASSPORT'),('1985-01-01',9,0,5,'Rodolfo','Rodriguez','AB554721','PASSPORT'),('1985-01-01',10,0,5,'Maria','Ferrari','AB554722','PASSPORT');
 /*!40000 ALTER TABLE `passenger` ENABLE KEYS */;
 UNLOCK TABLES;
 
